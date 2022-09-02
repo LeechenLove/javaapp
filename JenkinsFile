@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: '111', url: 'https://github.com/LeechenLove/LeanrnMaven.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: '111', url: 'https://github.com/LeechenLove/javaapp.git']]])
             }
         }
         stage('mvn package') {
@@ -22,7 +22,7 @@ pipeline {
         }
         stage('mvn run') {
             steps{
-                sh 'cd /var/lib/jenkins/workspace/MavenPro/target && java -jar LeanrnMaven-1.0-SNAPSHOT.jar'
+                sh 'cd /var/lib/jenkins/workspace/JavaWebApp/target && java -Dtomcat.connector.port=9010 -cp "target/JavaWebApp/WEB-INF/classes;target/JavaWebApp/WEB-INF/lib/*" io.github.dunwu.Main'
             }
         }
     }
