@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    options {
+        retry(3)
+    }
+    tools {
+            // Install the Maven version configured as "M3" and add it to the path.
+            maven "maven3.6"
+            jdk "jdk1.8"
+        }
+    triggers{cron('00 23 * * *')}
+    stages {
+        stage('checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: '111', url: 'https://github.com/LeechenLove/LeanrnMaven.git']]])
+            }
+        }
+        stage('mvn package') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('mvn run') {
+            steps{
+                sh 'cd /var/lib/jenkins/workspace/MavenPro/target && java -jar LeanrnMaven-1.0-SNAPSHOT.jar'
+            }
+        }
+    }
+}
