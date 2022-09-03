@@ -20,9 +20,9 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('mvn run') {
+        stage('deploy war') {
             steps{
-                sh 'cd /var/lib/jenkins/workspace/JavaWebApp/target && java -Dtomcat.connector.port=9010 -cp "target/JavaWebApp/WEB-INF/classes;target/JavaWebApp/WEB-INF/lib/*" io.github.dunwu.Main'
+                deploy adapters: [tomcat8(credentialsId: 'tomcat1', path: '', url: 'http://43.138.194.213:8081/')], contextPath: '/javaapp', war: '**/*.war'
             }
         }
     }
