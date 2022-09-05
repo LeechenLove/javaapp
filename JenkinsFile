@@ -18,7 +18,7 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('deploy war') {
+        stage('run backgroud') {
             steps{
                 script{
                 withEnv(['JENKINS_NODE_COOKIE=background_job']) {
@@ -39,5 +39,5 @@ pipeline {
         failure {
             sh "echo fail"
         }
-      }
+     }
 }
