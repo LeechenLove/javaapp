@@ -6,5 +6,5 @@ else
    kill -9 $pid
 fi
 pwd
-nohup java -Dtomcat.connector.port=9010 -cp ./target/JavaWebApp/WEB-INF/classes:./target/JavaWebApp/WEB-INF/lib/* io.github.dunwu.Main > temp.log &
+echo $(nohup java -Dtomcat.connector.port=9010 -cp ./target/JavaWebApp/WEB-INF/classes:./target/JavaWebApp/WEB-INF/lib/* io.github.dunwu.Main > temp.log &)
 echo 'ending...'
