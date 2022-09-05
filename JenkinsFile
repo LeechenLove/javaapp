@@ -98,7 +98,7 @@ pipeline {
                            steps{
                                   script{
                                         withEnv(['JENKINS_NODE_COOKIE=background_job']) {
-                                             sh 'chmod +x ./scripts/roolback.sh'
+                                             sh 'chmod +x ./scripts/rollback.sh'
                                              sh './scripts/rollback.sh'
                         }
                     }
