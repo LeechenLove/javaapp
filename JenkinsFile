@@ -76,6 +76,34 @@ pipeline {
                 }
             }
         }
+
+        stage('stop service') {
+                 when {
+                                environment name:"ACTION", value: "stop"
+                            }
+                    steps{
+                        script{
+                        withEnv(['JENKINS_NODE_COOKIE=background_job']) {
+                             sh 'chmod +x ./scripts/stop.sh'
+                             sh './scripts/stop.sh'
+                        }
+                        }
+                    }
+                }
+
+        stage('rollback service') {
+                    when {
+                            environment name:"ACTION", value: "rollback"
+                     }
+                           steps{
+                                  script{
+                                        withEnv(['JENKINS_NODE_COOKIE=background_job']) {
+                                             sh 'chmod +x ./scripts/roolback.sh'
+                                             sh './scripts/rollback.sh'
+                        }
+                    }
+             }
+        }
     }
      post{
         always {
