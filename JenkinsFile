@@ -32,7 +32,7 @@ pipeline {
             )
     }
 
-    triggers{cron('00 23 * * *')}
+    //triggers{cron('00 23 * * *')}
     stages {
 
         stage("打印信息") {      //打印信息
