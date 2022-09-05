@@ -20,6 +20,7 @@ pipeline {
         }
         stage('deploy war') {
             steps{
+                sh 'chmod +x ./scripts/killapp.sh'
                 sh './scripts/killapp.sh'
             }
         }
