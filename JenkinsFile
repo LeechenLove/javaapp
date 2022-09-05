@@ -39,13 +39,9 @@ pipeline {
                     steps {
                         echo "打印信息"
                         echo "jenkins任务名: ${JOB_NAME}"
-                        echo "项目名: ${PROJECT_NAME}"
-                        echo "服务名：${SERVICE_NAME}"
                         echo "执行动作: ${ACTION}"
-                        echo "gitlab分支名: ${BRANCH_NAME}"
                         echo "build_id: ${BUILD_ID}"
                         echo "工作空间: ${WORKSPACE}"
-                        echo "发布服务器: ${Release_servers}"
                    }
                 }
 
