@@ -1,29 +1,81 @@
 pipeline {
     agent any
 
+    environment{
+        GITURL = "https://github.com/LeechenLove/javaapp.git"
+    }
+
     tools {
             // Install the Maven version configured as "M3" and add it to the path.
             maven "maven3.6"
             jdk "jdk1.8"
-        }
+    }
+
+    options {
+            timestamps()    // 构建日志中带上时间
+            disableConcurrentBuilds()   // 不允许同时执行流水线
+            timeout(time: 5, unit: "MINUTES")   // 设置流水线运行超过5分钟，Jenkins将中止流水线
+            buildDiscarder(logRotator(numToKeepStr: "10"))   // 表示保留10次构建历史
+    }
+
+    parameters{
+    choice(
+                choices: ['deploy', 'rollback','start','restart','stop'],
+                description: '''发布选项：
+                发布：deploy
+                回滚：rollback
+                启动：start
+                重启：restart
+                停止：stop
+                ''',
+                name: 'ACTION'
+            )
+    }
+
     triggers{cron('00 23 * * *')}
     stages {
+
+        stage("打印信息") {      //打印信息
+                    steps {
+                        echo "打印信息"
+                        echo "jenkins任务名: ${JOB_NAME}"
+                        echo "项目名: ${PROJECT_NAME}"
+                        echo "服务名：${SERVICE_NAME}"
+                        echo "执行动作: ${ACTION}"
+                        echo "gitlab分支名: ${BRANCH_NAME}"
+                        echo "build_id: ${BUILD_ID}"
+                        echo "工作空间: ${WORKSPACE}"
+                        echo "发布服务器: ${Release_servers}"
+                   }
+                }
+
         stage('checkout') {
+           when {
+                    environment name:"ACTION", value: "deploy"
+           }
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: '111', url: 'https://github.com/LeechenLove/javaapp.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: '111', url: "${GITURL}"]]])
             }
         }
+
         stage('mvn package') {
+         when {
+                        environment name:"ACTION", value: "deploy"
+                    }
             steps {
                 sh 'mvn clean package'
             }
         }
+
         stage('run backgroud') {
+         when {
+                        environment name:"ACTION", value: "deploy"
+                    }
             steps{
                 script{
                 withEnv(['JENKINS_NODE_COOKIE=background_job']) {
-                     sh 'chmod +x ./scripts/killapp.sh'
-                     sh './scripts/killapp.sh'
+                     sh 'chmod +x ./scripts/deploy.sh'
+                     sh './scripts/deploy.sh'
                 }
                 }
             }
