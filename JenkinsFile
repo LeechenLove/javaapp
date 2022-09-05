@@ -20,9 +20,24 @@ pipeline {
         }
         stage('deploy war') {
             steps{
-                sh 'chmod +x ./scripts/killapp.sh'
-                sh './scripts/killapp.sh'
+                script{
+                withEnv(['JENKINS_NODE_COOKIE=background_job']) {
+                     sh 'chmod +x ./scripts/killapp.sh'
+                     sh './scripts/killapp.sh'
+                }
+                }
             }
         }
     }
+     post{
+        always {
+            sh 'echo always'
+        }
+        success {
+            sh "echo success"
+        }
+        failure {
+            sh "echo fail"
+        }
+      }
 }
